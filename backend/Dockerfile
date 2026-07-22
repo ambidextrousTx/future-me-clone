@@ -1,5 +1,6 @@
 # Slim cuts image size and pulls / builds faster
-FROM python:3.14-slim
+# Choosing a version old enough so that we can have asyncpg
+FROM python:3.12-slim
 
 WORKDIR /code
 
