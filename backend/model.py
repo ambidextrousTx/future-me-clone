@@ -22,10 +22,11 @@ class Email(Base):
     subject: Mapped[str] = mapped_column(Text, nullable=False)
     body_html: Mapped[str] = mapped_column(Text, nullable=False)
     send_date: Mapped[datetime] = mapped_column(nullable=False)
-    status: Mapped[str] = mapped_column(Text, nullable=False, default="pending")
+    status: Mapped[str] = mapped_column(Text, nullable=False,
+                                        default="pending")
     created_at: Mapped[datetime] = mapped_column(
         nullable=False, server_default=func.now()
-    )
+    )  # Matches database behavior by filling in now at insert time
     sent_at: Mapped[datetime | None] = mapped_column(default=None)
     send_attempts: Mapped[int] = mapped_column(nullable=False, default=0)
     last_error: Mapped[str | None] = mapped_column(Text, default=None)
