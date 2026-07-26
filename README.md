@@ -1,7 +1,13 @@
 # future-me-clone
-A clone of FutureMe.org for running locally via docker-compose
+A clone of FutureMe.org for local hosting
+
+## Tech stack
+* Python (Asyncpg, Asyncio, Pydantic, FastAPI)
+* Postgres
+* ?? for frontend
 
 ## Monorepo structure
+```
 future-me-clone/
 ├── docker-compose.yml
 ├── .env.example
@@ -37,3 +43,4 @@ future-me-clone/
 │
 └── docs/
     └── architecture.md      # notes like the ones we're generating now
+```
