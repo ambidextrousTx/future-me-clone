@@ -10,6 +10,9 @@ class Base(DeclarativeBase):
 
 
 class Email(Base):
+    """
+    Represents a database row
+    """
     __tablename__ = "emails"
     __table_args__ = (
         CheckConstraint(

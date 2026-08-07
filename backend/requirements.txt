@@ -2,3 +2,4 @@ fastapi[standard]==0.115.6
 sqlalchemy[asyncio]==2.0.36
 asyncpg==0.30.0
 pydantic-settings==2.7.0
+email-validator==2.3.0
