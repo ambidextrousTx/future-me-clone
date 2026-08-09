@@ -3,8 +3,10 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db import get_db
+from routes.emails import router as email_router
 
 app = FastAPI()
+app.include_router(email_router)
 
 
 @app.get('/health')

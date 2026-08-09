@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import CheckConstraint, Text
+from sqlalchemy import CheckConstraint, Text, DateTime
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.sql import func
 
@@ -24,12 +24,18 @@ class Email(Base):
     recipient_email: Mapped[str] = mapped_column(Text, nullable=False)
     subject: Mapped[str] = mapped_column(Text, nullable=False)
     body_html: Mapped[str] = mapped_column(Text, nullable=False)
-    send_date: Mapped[datetime] = mapped_column(nullable=False)
+    send_date: Mapped[datetime] = mapped_column(
+            DateTime(timezone=True),
+            nullable=False)
     status: Mapped[str] = mapped_column(Text, nullable=False,
                                         default="pending")
     created_at: Mapped[datetime] = mapped_column(
-        nullable=False, server_default=func.now()
+            DateTime(timezone=True),
+            nullable=False,
+            server_default=func.now()
     )  # Matches database behavior by filling in now at insert time
-    sent_at: Mapped[datetime | None] = mapped_column(default=None)
+    sent_at: Mapped[datetime | None] = mapped_column(
+            DateTime(timezone=True),
+            default=None)
     send_attempts: Mapped[int] = mapped_column(nullable=False, default=0)
     last_error: Mapped[str | None] = mapped_column(Text, default=None)
