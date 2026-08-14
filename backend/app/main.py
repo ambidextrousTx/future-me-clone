@@ -1,12 +1,26 @@
+from contextlib import asynccontextmanager
+
 from fastapi import Depends, FastAPI
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db import get_db
-from routes.emails import router as email_router
+from routes.emails import router as emails_router
+from scheduler import scheduler
 
-app = FastAPI()
-app.include_router(email_router)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Everything before yield runs on startup
+    scheduler.start()
+    yield
+    # Everything after yield runs on shutdown
+    scheduler.shutdown()
+
+
+app = FastAPI(lifespan=lifespan)
+
+app.include_router(emails_router)
 
 
 @app.get('/health')

@@ -3,7 +3,7 @@ import logging
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from sqlalchemy import text
 
-from app.db import async_session
+from db import async_session
 
 logger = logging.getLogger(__name__)
 
