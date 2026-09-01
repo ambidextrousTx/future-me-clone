@@ -1,3 +1,9 @@
+-- Create a separate test database
+-- Schema for app_test is created separately, at test-run time, via
+-- Base.metadata.create_all() against this database (see tests/conftest.py).
+CREATE DATABASE app_test;
+
+-- Production database already exists; this table is created there
 CREATE TABLE emails (
   id                    SERIAL PRIMARY KEY,
   recipient_email       TEXT NOT NULL,
