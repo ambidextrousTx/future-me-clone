@@ -13,6 +13,11 @@ TEST_DATABASE_URL = os.environ["TEST_DATABASE_URL"]
 
 @pytest_asyncio.fixture(scope="session")
 async def test_engine():
+    """
+    Created once for an entire test run. Schema creation
+    is expensive and doesn't need to be done on a per-test
+    basis
+    """
     engine = create_async_engine(TEST_DATABASE_URL)
 
     async with engine.begin() as conn:
@@ -28,6 +33,9 @@ async def test_engine():
 
 @pytest_asyncio.fixture()
 async def db_session(test_engine):
+    """
+    Runs once per test
+    """
     connection = await test_engine.connect()
     trans = await connection.begin()
 
@@ -56,6 +64,8 @@ async def client(db_session):
     async def override_get_db():
         yield db_session
 
+    # Whenever a route asks for get_db, give it this test's db_session
+    # instead of the real one
     app.dependency_overrides[get_db] = override_get_db
 
     transport = ASGITransport(app=app)
