@@ -33,6 +33,13 @@ async def db_session(test_engine):
 
     session = AsyncSession(
         bind=connection,
+        # Bind the test's session to a connection using
+        # join_transaction_mode="create_savepoint". This makes every commit()
+        # the app code calls actually commit to a savepoint (a nested
+        # checkpoint within the outer transaction) instead of the real
+        # transaction — so app code thinks it's committing normally, but
+        # the outer transaction (which we roll back at the end of the test)
+        # still undoes everything.
         join_transaction_mode="create_savepoint",
         expire_on_commit=False,
     )
