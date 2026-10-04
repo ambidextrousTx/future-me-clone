@@ -6,6 +6,11 @@ A clone of FutureMe.org for local hosting
 * Postgres
 * ?? for frontend
 
+## Running tests (once the cluster is up)
+```bash
+$ docker compose exec backend pytest
+```
+
 ## Monorepo structure
 ```
 future-me-clone/
