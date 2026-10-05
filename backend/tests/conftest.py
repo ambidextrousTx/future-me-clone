@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from db import get_db
 from main import app
-from models import Base
+from model import Base
 
 TEST_DATABASE_URL = os.environ["TEST_DATABASE_URL"]
 
