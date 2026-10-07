@@ -2,7 +2,6 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 from pydantic import ValidationError
-
 from schemas import EmailCreate
 
 VALID_PAYLOAD = {

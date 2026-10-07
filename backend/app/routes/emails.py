@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
+from model import Email
+from schemas import EmailCreate, EmailOut
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db import get_db
-from model import Email
-from schemas import EmailCreate, EmailOut
 
 router = APIRouter()
 

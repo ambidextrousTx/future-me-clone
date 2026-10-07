@@ -2,11 +2,11 @@ import os
 
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
+from main import app
+from model import Base
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from db import get_db
-from main import app
-from model import Base
 
 TEST_DATABASE_URL = os.environ["TEST_DATABASE_URL"]
 

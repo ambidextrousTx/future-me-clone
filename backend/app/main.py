@@ -1,12 +1,12 @@
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
+from routes.emails import router as emails_router
+from scheduler import scheduler
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db import get_db
-from routes.emails import router as emails_router
-from scheduler import scheduler
 
 
 @asynccontextmanager
