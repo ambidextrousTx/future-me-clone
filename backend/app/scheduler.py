@@ -20,14 +20,16 @@ DUE_EMAILS_QUERY = text(
 )
 
 
-async def promote_due_emails() -> None:
-    async with async_session() as session:
+async def promote_due_emails(session_factory=async_session) -> None:
+    async with session_factory() as session:
         result = await session.execute(DUE_EMAILS_QUERY)
         sent_ids = [row.id for row in result]
         await session.commit()
 
     if sent_ids:
         logger.info("Promoted %d email(s) to sent: %s", len(sent_ids), sent_ids)
+
+    return sent_ids
 
 
 scheduler = AsyncIOScheduler()
