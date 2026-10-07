@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 
-from models import Email
+from model import Email
 from scheduler import promote_due_emails
 from sqlalchemy import select
 
