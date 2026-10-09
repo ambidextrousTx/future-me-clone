@@ -5,6 +5,7 @@ from httpx import ASGITransport, AsyncClient
 from main import app
 from model import Base
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.pool import NullPool
 
 from db import get_db
 
@@ -18,7 +19,7 @@ async def test_engine():
     is expensive and doesn't need to be done on a per-test
     basis
     """
-    engine = create_async_engine(TEST_DATABASE_URL)
+    engine = create_async_engine(TEST_DATABASE_URL, poolclass=NullPool)
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)

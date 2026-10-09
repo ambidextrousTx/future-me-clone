@@ -104,7 +104,11 @@ async def test_promotes_only_due_rows_among_a_mix(db_session):
 
     assert sent_ids == [due.id]
 
-    result = await db_session.execute(select(Email).order_by(Email.id))
+    result = await db_session.execute(
+            select(Email)
+            .order_by(Email.id)
+            .execution_options(populate_existing=True)
+            )
     emails_by_id = {e.id: e for e in result.scalars()}
 
     assert emails_by_id[due.id].status == "sent"
