@@ -20,3 +20,42 @@ async def test_happy_path_returns_201(client):
     assert body['send_attempts'] == 0
     assert body['created_at'] is not None
     assert body['sent_at'] is None
+
+
+async def test_past_send_date_returns_422(client):
+    send_date = datetime.now(timezone.utc) - timedelta(minutes=1)
+
+    response = await client.post('/emails', json={
+        'recipient_email': 'future-me@example.com',
+        'subject': 'test',
+        'body_html': '<p>test</p>',
+        'send_date': send_date.isoformat()
+        })
+
+    assert response.status_code == 422
+
+
+async def test_naive_send_date_returns_422(client):
+    send_date = datetime.now() - timedelta(minutes=1)
+
+    response = await client.post('/emails', json={
+        'recipient_email': 'future-me@example.com',
+        'subject': 'test',
+        'body_html': '<p>test</p>',
+        'send_date': send_date.isoformat()
+        })
+
+    assert response.status_code == 422
+
+
+async def test_invalid_email_returns_422(client):
+    send_date = datetime.now(timezone.utc) - timedelta(minutes=1)
+
+    response = await client.post('/emails', json={
+        'recipient_email': 'future-me@example.com',
+        'subject': 'test',
+        'body_html': '<p>test</h1></p>',
+        'send_date': send_date.isoformat()
+        })
+
+    assert response.status_code == 422
