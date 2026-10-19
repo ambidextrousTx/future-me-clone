@@ -1,5 +1,8 @@
 from datetime import datetime, timedelta, timezone
 
+from model import Email
+from sqlalchemy import select
+
 VALID_PAYLOAD = {
     "recipient_email": "future-me@example.com",
     "subject": "Hello from the past",
@@ -66,3 +69,29 @@ async def test_invalid_email_returns_422(client):
     assert response.status_code == 422
     detail = response.json()["detail"][0]
     assert detail["loc"] == ["body", "recipient_email"]
+
+
+async def test_created_email_is_persisted(client, db_session):
+    send_date = datetime.now(timezone.utc) + timedelta(days=1)
+
+    response = await client.post("/emails", json={
+        **VALID_PAYLOAD,
+        "send_date": send_date.isoformat(),
+    })
+    assert response.status_code == 201
+    email_id = response.json()["id"]
+
+    result = await db_session.execute(
+        select(Email)
+        .where(Email.id == email_id)
+        .execution_options(populate_existing=True)
+    )
+    row = result.scalar_one()
+
+    assert row.recipient_email == "future-me@example.com"
+    assert row.subject == VALID_PAYLOAD["subject"]
+    assert row.body_html == VALID_PAYLOAD["body_html"]
+    assert row.send_date == send_date
+    assert row.status == "pending"
+    assert row.send_attempts == 0
+    assert row.sent_at is None
