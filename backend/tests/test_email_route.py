@@ -21,7 +21,7 @@ async def test_happy_path_returns_201(client):
 
     body = response.json()
     assert isinstance(body['id'], int)
-    assert body['recipient_email'] == 'future-me@example.com'
+    assert body["recipient_email"] == VALID_PAYLOAD["recipient_email"]
     assert body['subject'] == VALID_PAYLOAD["subject"]
     assert body['status'] == 'pending'
     assert body['send_attempts'] == 0
@@ -88,7 +88,34 @@ async def test_created_email_is_persisted(client, db_session):
     )
     row = result.scalar_one()
 
-    assert row.recipient_email == "future-me@example.com"
+    assert row.recipient_email == VALID_PAYLOAD["recipient_email"]
+    assert row.subject == VALID_PAYLOAD["subject"]
+    assert row.body_html == VALID_PAYLOAD["body_html"]
+    assert row.send_date == send_date
+    assert row.status == "pending"
+    assert row.send_attempts == 0
+    assert row.sent_at is None
+
+
+async def test_client_supplied_status_still_creates_pending(client, db_session):
+    send_date = datetime.now(timezone.utc) + timedelta(days=1)
+
+    response = await client.post("/emails", json={
+        **VALID_PAYLOAD,
+        "send_date": send_date.isoformat(),
+        "status": "sent"
+    })
+    assert response.status_code == 201
+    email_id = response.json()["id"]
+
+    result = await db_session.execute(
+        select(Email)
+        .where(Email.id == email_id)
+        .execution_options(populate_existing=True)
+    )
+    row = result.scalar_one()
+
+    assert row.recipient_email == VALID_PAYLOAD["recipient_email"]
     assert row.subject == VALID_PAYLOAD["subject"]
     assert row.body_html == VALID_PAYLOAD["body_html"]
     assert row.send_date == send_date
