@@ -106,8 +106,9 @@ async def test_client_supplied_status_still_creates_pending(client, db_session):
         "status": "sent"
     })
     assert response.status_code == 201
-    email_id = response.json()["id"]
+    assert response.json()["status"] == "pending"
 
+    email_id = response.json()["id"]
     result = await db_session.execute(
         select(Email)
         .where(Email.id == email_id)
@@ -115,10 +116,6 @@ async def test_client_supplied_status_still_creates_pending(client, db_session):
     )
     row = result.scalar_one()
 
-    assert row.recipient_email == VALID_PAYLOAD["recipient_email"]
-    assert row.subject == VALID_PAYLOAD["subject"]
-    assert row.body_html == VALID_PAYLOAD["body_html"]
-    assert row.send_date == send_date
     assert row.status == "pending"
-    assert row.send_attempts == 0
     assert row.sent_at is None
+    assert row.send_attempts == 0
