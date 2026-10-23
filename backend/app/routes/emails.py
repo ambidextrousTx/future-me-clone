@@ -15,3 +15,7 @@ async def create_email(email_in: EmailCreate, db: AsyncSession = Depends(get_db)
     await db.commit()
     await db.refresh(email)
     return email
+
+@router.get("/emails", reponse_model=EmailCreate, status_code=200)
+async def get_emails(db: AsyncSession = Depends(get_db)):
+    pass
