@@ -119,3 +119,19 @@ async def test_client_supplied_status_still_creates_pending(client, db_session):
     assert row.status == "pending"
     assert row.sent_at is None
     assert row.send_attempts == 0
+
+
+async def test_empty_list_is_returned_for_no_emails(db_session):
+    pass
+
+
+async def test_only_sent_emails_are_returned(db_session):
+    pass
+
+
+async def test_sent_emails_are_ordered_descending(db_session):
+    pass
+
+
+async def test_ui_required_fields_are_returned(db_session):
+    pass
