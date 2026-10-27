@@ -1,9 +1,10 @@
 import os
+from datetime import datetime, timedelta, timezone
 
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from main import app
-from model import Base
+from model import Base, Email
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.pool import NullPool
 
@@ -74,3 +75,35 @@ async def client(db_session):
         yield ac
 
     app.dependency_overrides.clear()
+
+
+@pytest_asyncio.fixture()
+async def make_email(db_session):
+    async def _make(*, status="pending", send_date=None, sent_at=None, **overrides):
+        now = datetime.now(timezone.utc)
+
+        # A sent email's send_date is in the past; a pending one is in the future.
+        if send_date is None:
+            send_date = now - timedelta(hours=1) if status == "sent" else now + timedelta(days=1)
+
+        # A sent email should have a sent_at, or it would sort strangely.
+        if status == "sent" and sent_at is None:
+            sent_at = now
+
+        fields = {
+            "recipient_email": "future-me@example.com",
+            "subject": "test",
+            "body_html": "<p>test</p>",
+            "send_date": send_date,
+            "status": status,
+            "sent_at": sent_at,
+        }
+        fields.update(overrides)
+
+        email = Email(**fields)
+        db_session.add(email)
+        await db_session.commit()
+        await db_session.refresh(email)
+        return email
+
+    return _make
