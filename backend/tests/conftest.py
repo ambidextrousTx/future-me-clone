@@ -79,6 +79,7 @@ async def client(db_session):
 
 @pytest_asyncio.fixture()
 async def make_email(db_session):
+    # * in function signature forces use of parameter names in callers
     async def _make(*, status="pending", send_date=None, sent_at=None, **overrides):
         now = datetime.now(timezone.utc)
 
@@ -98,6 +99,7 @@ async def make_email(db_session):
             "status": status,
             "sent_at": sent_at,
         }
+        # Allow a test to change data
         fields.update(overrides)
 
         email = Email(**fields)
