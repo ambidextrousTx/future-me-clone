@@ -121,16 +121,31 @@ async def test_client_supplied_status_still_creates_pending(client, db_session):
     assert row.send_attempts == 0
 
 
-async def test_empty_list_is_returned_for_no_emails(db_session):
-    pass
+async def test_empty_list_is_returned_for_no_emails(client):
+    response = await client.get("/emails")
+
+    assert [e["id"] for e in response.json()] == []
 
 
-async def test_only_sent_emails_are_returned(db_session):
-    pass
+async def test_only_sent_emails_are_returned(client, make_email):
+    now = datetime.now(timezone.utc)
+    sent1 = await make_email(status="sent", sent_at=now - timedelta(hours=2))
+    sent2 = await make_email(status="sent", sent_at=now - timedelta(hours=1))
+    _ = await make_email(status="pending")
+
+    response = await client.get("/emails")
+
+    assert [e["id"] for e in response.json()] == [sent2.id, sent1.id]
 
 
-async def test_sent_emails_are_ordered_descending(db_session):
-    pass
+async def test_sent_emails_are_ordered_descending(client, make_email):
+    now = datetime.now(timezone.utc)
+    older = await make_email(status="sent", sent_at=now - timedelta(hours=2))
+    newer = await make_email(status="sent", sent_at=now - timedelta(hours=1))
+
+    response = await client.get("/emails")
+
+    assert [e["id"] for e in response.json()] == [newer.id, older.id]
 
 
 async def test_ui_required_fields_are_returned(db_session):
