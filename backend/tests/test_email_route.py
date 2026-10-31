@@ -124,18 +124,22 @@ async def test_client_supplied_status_still_creates_pending(client, db_session):
 async def test_empty_list_is_returned_for_no_emails(client):
     response = await client.get("/emails")
 
-    assert [e["id"] for e in response.json()] == []
+    assert response.status_code == 200
+    assert response.json() == []
 
 
 async def test_only_sent_emails_are_returned(client, make_email):
     now = datetime.now(timezone.utc)
     sent1 = await make_email(status="sent", sent_at=now - timedelta(hours=2))
     sent2 = await make_email(status="sent", sent_at=now - timedelta(hours=1))
-    _ = await make_email(status="pending")
+    pending = await make_email(status="pending")
 
     response = await client.get("/emails")
 
-    assert [e["id"] for e in response.json()] == [sent2.id, sent1.id]
+    assert response.status_code == 200
+    ids = {e["id"] for e in response.json()}
+    assert ids == {sent1.id, sent2.id}
+    assert pending.id not in ids
 
 
 async def test_sent_emails_are_ordered_descending(client, make_email):
@@ -148,5 +152,23 @@ async def test_sent_emails_are_ordered_descending(client, make_email):
     assert [e["id"] for e in response.json()] == [newer.id, older.id]
 
 
-async def test_ui_required_fields_are_returned(db_session):
-    pass
+async def test_ui_required_fields_are_returned(client, make_email):
+    email = await make_email(
+        status="sent",
+        subject="Dear future me",
+        body_html="<p><strong>Hello</strong></p>",
+    )
+
+    response = await client.get("/emails")
+
+    assert response.status_code == 200
+    [item] = response.json()
+
+    required = {"id", "subject", "body_html", "created_at", "sent_at"}
+    assert required <= item.keys()
+
+    assert item["id"] == email.id
+    assert item["subject"] == "Dear future me"
+    assert item["body_html"] == "<p><strong>Hello</strong></p>"
+    assert item["created_at"] is not None
+    assert item["sent_at"] is not None
