@@ -172,3 +172,20 @@ async def test_ui_required_fields_are_returned(client, make_email):
     assert item["body_html"] == "<p><strong>Hello</strong></p>"
     assert item["created_at"] is not None
     assert item["sent_at"] is not None
+
+
+async def test_cors_preflight_allows_frontend_origin(client):
+    response = await client.options("/emails", headers={
+        "Origin": "http://localhost:3000",
+        "Access-Control-Request-Method": "POST",
+        "Access-Control-Request-Headers": "content-type",
+    })
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://localhost:3000"
+
+
+async def test_cors_does_not_allow_unknown_origin(client):
+    response = await client.get("/emails", headers={"Origin": "http://evil.example"})
+
+    assert "access-control-allow-origin" not in response.headers
