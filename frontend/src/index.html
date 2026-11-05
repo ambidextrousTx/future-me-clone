@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Future Mail</title>
+</head>
+<body>
+  <h1>Future Mail</h1>
+  <p id="status">Checking the backend…</p>
+  <script>
+    fetch("http://localhost:8000/health")
+      .then((r) => r.json())
+      .then((data) => {
+        document.getElementById("status").textContent =
+          "Backend says: " + data.message;
+      })
+      .catch((err) => {
+        document.getElementById("status").textContent = "Failed: " + err;
+      });
+  </script>
+</body>
+</html>
