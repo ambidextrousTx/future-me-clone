@@ -3,20 +3,15 @@
 <head>
   <meta charset="utf-8">
   <title>Future Mail</title>
+  <link rel="stylesheet" href="vendor/quill/quill.snow.css">
 </head>
 <body>
   <h1>Future Mail</h1>
-  <p id="status">Checking the backend…</p>
-  <script>
-    fetch("http://localhost:8000/health")
-      .then((r) => r.json())
-      .then((data) => {
-        document.getElementById("status").textContent =
-          "Backend says: " + data.message;
-      })
-      .catch((err) => {
-        document.getElementById("status").textContent = "Failed: " + err;
-      });
-  </script>
+  <div id="editor"></div>
+  <button id="show-html">Show HTML</button>
+  <pre id="html-output"></pre>
+
+  <script src="vendor/quill/quill.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
