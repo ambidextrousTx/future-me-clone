@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Future Me Clone</title>
     <link rel="stylesheet" href="vendor/quill/quill.snow.css">
+    <link rel="stylesheet" href="./style.css">
   </head>
   <body>
     <h1>Send an Email to Your Future Self</h1>
@@ -12,7 +13,13 @@
       <label>Subject <input type="text" name="subject" required></label>
       <label>Deliver on <input type="datetime-local" name="send_date" required></label>
 
+      <br />
+      <br />
+
       <div id="editor"></div>
+
+      <br />
+      <br />
 
       <button type="submit">Schedule</button>
       <p id="message" role="status"></p>
