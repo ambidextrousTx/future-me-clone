@@ -1,3 +1,17 @@
 label {
   padding: 10px;
 }
+
+.slabo-13px-regular {
+  font-family: "Slabo 13px", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.carrois-gothic-regular {
+  font-family: "Carrois Gothic", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
