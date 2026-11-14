@@ -2,6 +2,7 @@
 export function createEditor(selector) {
   const quill = new Quill(selector, {
     theme: "snow",
+    placeholder: "Dear Future Me ...",
     modules: {
       toolbar: [
         ["bold", "italic", "underline"],
@@ -17,5 +18,6 @@ export function createEditor(selector) {
     // which would stop paragraphs from wrapping. Normalize them back.
     getHtml: () => quill.getSemanticHTML().replaceAll("&nbsp;", " "),
     isEmpty: () => quill.getText().trim().length === 0,
+    clear: () => quill.setText("")
   };
 }

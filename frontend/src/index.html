@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Future Me Clone</title>
-  <link rel="stylesheet" href="vendor/quill/quill.snow.css">
-</head>
-<body>
-  <h1>Send an Email to Your Future Self</h1>
-  <div id="editor"></div>
-  <button id="show-html">Show HTML</button>
-  <pre id="html-output"></pre>
+  <head>
+    <meta charset="utf-8">
+    <title>Future Me Clone</title>
+    <link rel="stylesheet" href="vendor/quill/quill.snow.css">
+  </head>
+  <body>
+    <h1>Send an Email to Your Future Self</h1>
+    <form id="email-form">
+      <label>To <input type="email" name="recipient_email" required></label>
+      <label>Subject <input type="text" name="subject" required></label>
+      <label>Deliver on <input type="datetime-local" name="send_date" required></label>
 
-  <script src="vendor/quill/quill.js"></script>
-  <script type="module" src="app.js"></script>
-</body>
+      <div id="editor"></div>
+
+      <button type="submit">Schedule</button>
+      <p id="message" role="status"></p>
+    </form>
+
+    <script src="vendor/quill/quill.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
 </html>
