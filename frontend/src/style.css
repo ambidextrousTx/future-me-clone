@@ -14,4 +14,10 @@ label {
   font-style: normal;
 }
 
-
+.submit-button {
+  font-family: "Slabo 13px", serif;
+  font-weight: 300;
+  font-style: bold;
+  color: blue;
+  padding: 10px;
+}
