@@ -7,23 +7,37 @@
     <link rel="stylesheet" href="./style.css">
   </head>
   <body>
-    <h1 class='slabo-13px-regular'>Send an Email to Your Future Self</h1>
-    <form class='carrois-gothic-regular' id="email-form">
-      <label>To <input type="email" name="recipient_email" required></label>
-      <label>Subject <input type="text" name="subject" required></label>
-      <label>Deliver on <input type="datetime-local" name="send_date" required></label>
+    <h1 class="slabo-13px-regular">Send an Email to Your Future Self</h1>
 
-      <br />
-      <br />
+    <nav>
+      <a href="#compose" data-view="compose" class="carrois-gothic-regular">Compose</a>
+      <a href="#inbox" data-view="inbox" class="carrois-gothic-regular">Inbox</a>
+    </nav>
 
-      <div id="editor"></div>
+    <br />
 
-      <br />
-      <br />
+    <section data-view="compose">
+      <form class="carrois-gothic-regular" id="email-form">
+        <label>To <input type="email" name="recipient_email" required></label>
+        <label>Subject <input type="text" name="subject" required></label>
+        <label>Deliver on <input type="datetime-local" name="send_date" required></label>
 
-      <button class="submit-button" type="submit">Schedule</button>
-      <p id="message" role="status"></p>
-    </form>
+        <br />
+        <br />
+
+        <div id="editor"></div>
+
+        <br />
+        <br />
+
+        <button class="submit-button" type="submit">Schedule</button>
+        <p id="message" role="status"></p>
+      </form>
+    </section>
+
+    <section data-view="inbox" hidden>
+      <p>Nothing here yet</p>
+    </section>
 
     <script src="vendor/quill/quill.js"></script>
     <script type="module" src="app.js"></script>

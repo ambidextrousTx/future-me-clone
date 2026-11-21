@@ -2,6 +2,9 @@ label {
   padding: 10px;
 }
 
+nav a { margin-right: 1rem; text-decoration: none; }
+nav a[aria-current="page"] { font-weight: bold; border-bottom: 2px solid currentColor; }
+
 .slabo-13px-regular {
   font-family: "Slabo 13px", serif;
   font-weight: 400;
